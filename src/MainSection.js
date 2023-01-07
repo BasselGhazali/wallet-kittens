@@ -55,6 +55,12 @@ function MainSection() {
   return (
     <div class="mainsection">
         <div class="content">
+          <div class="introduction">
+            <p>This webpage is a WIP, being developed by <a href="https://github.com/BasselGhazali">Bassel Ghazali</a> to learn how to build an app using ReactJS which can connect to the blockchain.</p>
+            <p>When you open the page, you will be asked to connect your MetaMask wallet. When you do this, your public information will be displayed here.</p>
+            <p>New functions will continue to be added to this repo. The cats may vanish, but none of them will be harmed.</p>
+          </div>
+          <br></br>
           <div class="walletconnect">
             <p> Chain Name: { chainName }</p>
             <p> Chain ID: { chainID }</p>
@@ -62,6 +68,7 @@ function MainSection() {
             <p> Wallet: { currentAccount }</p>
             <p> Balance: { balance }</p>
           </div>
+          <br></br>
           <div class="kittenscore">
             <p>Kitten score: { kittenScore }</p>
             <button onClick={ decreaseScore }> Take catnip </button>
@@ -69,6 +76,7 @@ function MainSection() {
           </div>
         </div>
         <div class="sidebar">
+          <p>These cats do nothing but judge you silently.</p>
           <Cat name="Ahmed" num="300"/>
           <Cat name="Ali" num="301"/>
           <Cat name="Basil" num="302"/>
