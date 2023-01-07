@@ -1,0 +1,11 @@
+.footer{
+    background-color:grey;
+    height:3em;
+    display:flex;
+    justify-content:center;
+}
+
+.footer>ul>li{
+    display:inline;
+    padding-right:2em;
+}
