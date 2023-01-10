@@ -2,6 +2,7 @@ import "./MainSection.css";
 import Cat from './Cat.js';
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import ABI from "./HoldDataSimple.json";
 
 function MainSection() {
 
@@ -12,6 +13,13 @@ function MainSection() {
   const [balance, setBalance] = useState(null);
   const [blockNumber, setBlockNumber] = useState(null);
 
+  const[foodStatus, setFoodStatus] = useState(null);
+  const[blockchainScore, setBlockchainScore] = useState(null);
+  const[kittenName, setKittenName] = useState(null);
+
+  const[kittenExcitement, setKittenExcitement] = useState(null);
+  const[kittenCounter, setKittenCounter] = useState(null);
+  
   function increaseScore() {
     setKittenScore(kittenScore+1);
   }
@@ -25,7 +33,6 @@ function MainSection() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts");
         const currentAddress = await provider.getSigner().getAddress();
-        console.log(currentAddress);
         setCurrentAccount(currentAddress);
 
         const chain = await provider.getNetwork();
@@ -43,6 +50,29 @@ function MainSection() {
 
   const chainChanged = () => {
       window.location.reload();
+  }
+
+  const readHoldData = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    // const chosenContract = new ethers.Contract("0x7074471A3aF8Cabf7B766DDCFbb6E273A962ba2A",ABI,signer);
+    const chosenContract = new ethers.Contract("0xfAa16Ca238f08358F6439CE5CB03300874C483A6",ABI,signer);
+
+    const isKittenFed = await chosenContract.kittenFed();
+    setFoodStatus(isKittenFed.toString());
+
+    const whatIsName = await chosenContract.kittenName();
+    setKittenName(whatIsName.toString());
+
+    const getBlockchainScore = await chosenContract.kittenScore();
+    setBlockchainScore(getBlockchainScore.toString());
+    
+    const addedScore = await chosenContract.addScore();
+    setKittenCounter(addedScore.toString());
+
+    const excitedName = await chosenContract.exciteName();
+    setKittenExcitement(excitedName.toString());
+
   }
 
   window.ethereum.on('chainChanged', chainChanged);
@@ -73,6 +103,14 @@ function MainSection() {
             <p>Kitten score: { kittenScore }</p>
             <button onClick={ decreaseScore }> Take catnip </button>
             <button onClick={ increaseScore }> Give catnip </button>
+          </div>
+          <div class="blockchainreader">
+            <button onClick={ readHoldData }> Read from blockchain </button>
+            <p>Kitten name: { kittenName } </p>
+            <p>Kitten fed: { foodStatus } </p>
+            <p>Kitten score on blockchain: { blockchainScore } </p>
+            <p>Kitten score after addition: { kittenCounter } </p>
+            <p>Kitten name after excitement: { kittenExcitement } </p>
           </div>
         </div>
         <div class="sidebar">
