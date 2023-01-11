@@ -2,7 +2,7 @@ import "./MainSection.css";
 import Cat from './Cat.js';
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import ABI from "./HoldDataSimple.json";
+import ABI from "./smartContract.json";
 
 function MainSection() {
 
@@ -13,12 +13,9 @@ function MainSection() {
   const [balance, setBalance] = useState(null);
   const [blockNumber, setBlockNumber] = useState(null);
 
-  const[foodStatus, setFoodStatus] = useState(null);
-  const[blockchainScore, setBlockchainScore] = useState(null);
   const[kittenName, setKittenName] = useState(null);
+  const[userInput, setUserInput] = useState(null);
 
-  const[kittenExcitement, setKittenExcitement] = useState(null);
-  const[kittenCounter, setKittenCounter] = useState(null);
   
   function increaseScore() {
     setKittenScore(kittenScore+1);
@@ -52,27 +49,23 @@ function MainSection() {
       window.location.reload();
   }
 
-  const readHoldData = async () => {
+  const readFromSmartContract = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    // const chosenContract = new ethers.Contract("0x7074471A3aF8Cabf7B766DDCFbb6E273A962ba2A",ABI,signer);
-    const chosenContract = new ethers.Contract("0xfAa16Ca238f08358F6439CE5CB03300874C483A6",ABI,signer);
+    const smartContract = new ethers.Contract("0x0254e3dae148C43027Ce4a50Be007400D68CD7b9",ABI,signer);
 
-    const isKittenFed = await chosenContract.kittenFed();
-    setFoodStatus(isKittenFed.toString());
-
-    const whatIsName = await chosenContract.kittenName();
+    const whatIsName = await smartContract.kittenName();
     setKittenName(whatIsName.toString());
 
-    const getBlockchainScore = await chosenContract.kittenScore();
-    setBlockchainScore(getBlockchainScore.toString());
-    
-    const addedScore = await chosenContract.addScore();
-    setKittenCounter(addedScore.toString());
+  }
 
-    const excitedName = await chosenContract.exciteName();
-    setKittenExcitement(excitedName.toString());
-
+  const writeToSmartContract = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner()
+    const smartContract = new ethers.Contract("0x0254e3dae148C43027Ce4a50Be007400D68CD7b9",ABI,signer);
+    const newName = await smartContract.changeName(userInput);
+    const receipt = await newName.wait();
+    console.log("Name changed on blockchain, transaction info: ", receipt);
   }
 
   window.ethereum.on('chainChanged', chainChanged);
@@ -92,6 +85,7 @@ function MainSection() {
           </div>
           <br></br>
           <div class="walletconnect">
+            <p><strong>This data is being read through the MetaMask wallet you connect</strong></p>
             <p> Chain Name: { chainName }</p>
             <p> Chain ID: { chainID }</p>
             <p> Block Number: { blockNumber }</p>
@@ -100,17 +94,18 @@ function MainSection() {
           </div>
           <br></br>
           <div class="kittenscore">
+            <p><strong> This score is just a state variable in React because I like the cats and don't want them to be irrelevant </strong></p>
             <p>Kitten score: { kittenScore }</p>
             <button onClick={ decreaseScore }> Take catnip </button>
             <button onClick={ increaseScore }> Give catnip </button>
           </div>
           <div class="blockchainreader">
-            <button onClick={ readHoldData }> Read from blockchain </button>
-            <p>Kitten name: { kittenName } </p>
-            <p>Kitten fed: { foodStatus } </p>
-            <p>Kitten score on blockchain: { blockchainScore } </p>
-            <p>Kitten score after addition: { kittenCounter } </p>
-            <p>Kitten name after excitement: { kittenExcitement } </p>
+            <p><strong> This variable is on a smart contract I deployed on the Goerli testnet </strong></p>
+            <p>Kitten name on blockchain: { kittenName } </p>
+            <button onClick={ readFromSmartContract }> Read name from blockchain </button>
+            <br></br>
+            <input value={ userInput } onInput={ inputName => setUserInput(inputName.target.value) } />
+            <button onClick={ writeToSmartContract }> Write name to blockchain </button>
           </div>
         </div>
         <div class="sidebar">
