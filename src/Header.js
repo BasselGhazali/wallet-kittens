@@ -4,9 +4,9 @@ function Header() {
   return (
     <div class="header">
         <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
+            <li>Fake menu 1</li>
+            <li>Fake menu 2</li>
+            <li>Fake menu 3</li>
         </ul>
     </div>
   );
