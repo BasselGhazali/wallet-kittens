@@ -1,0 +1,7 @@
+.ToDoItem {
+    background-color: darkgray;
+    border-radius: 1em;
+    margin: 2em;
+    padding: 1em;
+    padding-top: .5em;
+}

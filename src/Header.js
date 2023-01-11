@@ -2,7 +2,7 @@ import "./Header.css";
 
 function Header() {
   return (
-    <div class="header">
+    <div className="header">
         <ul>
             <li>Fake menu 1</li>
             <li>Fake menu 2</li>
