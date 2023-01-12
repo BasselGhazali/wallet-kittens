@@ -19,6 +19,7 @@ function MainSection() {
   const[userInput, setUserInput] = useState(null);
 
   const[userTask, setUserTask] = useState(null);
+  const[tasks, setTasks] = useState([]);
 
   
   function increaseScore() {
@@ -87,9 +88,10 @@ function MainSection() {
     const smartContract = new ethers.Contract("0x03A0ABAF80715a8A1B91c6baA9774AD821B1DBFD",toDoABI,signer);
     const totalTasks = await smartContract.totalTasks();
     
+    setTasks([]);
     for(var i=0; i<totalTasks; i++){
-      const task = await smartContract.taskList(i);
-      console.log(task.taskName);
+      const tasks = await smartContract.taskList(i);
+      setTasks(prevTasks => [...prevTasks, tasks]);
     }
   }
 
@@ -98,6 +100,7 @@ function MainSection() {
 
   useEffect(() => {
     getWalletAddress();
+    updateTasks();
   }, []);
 
   return (
@@ -137,7 +140,11 @@ function MainSection() {
             <input value={ userTask } onInput={ inputTaskName => setUserTask(inputTaskName.target.value) } />
             <button onClick={ createTask }> Create task </button>
             <button onClick={ updateTasks }> Update list </button>
-            <Card Name="hmar" done={false}></Card>
+            {
+              tasks.map((item) => (
+                <Card Name={item.taskName} id={item.id} done={item.isCompleted}></Card>
+              ))
+            }
           </div>
         </div>
         <div className="sidebar">
