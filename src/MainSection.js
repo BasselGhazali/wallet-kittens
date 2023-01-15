@@ -15,10 +15,10 @@ function MainSection() {
   const [balance, setBalance] = useState(null);
   const [blockNumber, setBlockNumber] = useState(null);
 
-  const[kittenName, setKittenName] = useState(null);
-  const[userInput, setUserInput] = useState(null);
+  const[kittenName, setKittenName] = useState("");
+  const[userInput, setUserInput] = useState("");
 
-  const[userTask, setUserTask] = useState(null);
+  const[userTask, setUserTask] = useState("");
   const[tasks, setTasks] = useState([]);
 
   
@@ -132,26 +132,25 @@ function MainSection() {
             <p>Kitten name on blockchain: { kittenName } </p>
             <button onClick={ readFromSmartContract }> Read name from blockchain </button>
             <br></br>
-            <input value={ userInput } onInput={ inputName => setUserInput(inputName.target.value) } />
+            <input value={ userInput } onChange={ inputName => setUserInput(inputName.target.value) } />
             <button onClick={ writeToSmartContract }> Write name to blockchain </button>
           </div>
           <div className="todo">
             <p><strong> This is another smart contract I deployed, which allows you to create tasks then mark them as done </strong></p>
-            <input value={ userTask } onInput={ inputTaskName => setUserTask(inputTaskName.target.value) } />
+            <input value={ userTask } onChange={ inputTaskName => setUserTask(inputTaskName.target.value) } />
             <button onClick={ createTask }> Create task </button>
-            <button onClick={ updateTasks }> Update list </button>
             {
               tasks.map((item) => (
-                <Card Name={item.taskName} id={item.id} done={item.isCompleted}></Card>
+                <Card key={item.id} id={item.id} name={item.taskName} done={item.isCompleted} timedone={item.completionTime}></Card>
               ))
             }
           </div>
         </div>
         <div className="sidebar">
           <p>These cats do nothing but judge you silently.</p>
-          <Cat name="Bambi" num="300"/>
-          <Cat name="Ali" num="301"/>
-          <Cat name="Basil" num="302"/>
+          <Cat name="Bambi" num="301"/>
+          <Cat name="Ali" num="302"/>
+          <Cat name="Basil" num="303"/>
         </div>
     </div>
   );
